@@ -1,0 +1,8 @@
+{
+  "resourceConnectionString": "endpoint=your_endpoint;accesskey=secret",
+  "endpointUrl": "EndpointCommunicationService",
+  "azureOpenAiServiceKey": "APIKeyAzureOpenAIService",
+  "azureOpenAiServiceEndpoint": "EndpointAzureOpenAIService",
+  "azureOpenAiServiceDeploymentModelName": "gpt-4o-realtime-preview",
+  "callbackUri": "https://AzureAppServiceCallBackUri"
+} 

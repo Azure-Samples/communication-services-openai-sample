@@ -1,0 +1,26 @@
+{
+  "name": "openai-calling-sample",
+  "version": "1.0.0",
+  "description": "--- page_type: sample languages: - javascript - nodejs - products: - azure - azure-communication-services ---",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "setup": "cd server && npm install && cd ../client && npm install && cd ..",
+    "start": "cd client && npm run start && cd ..",
+    "start:dev": "cd client && npm run start:dev && cd ..",
+    "build": "cd server && npm run build && cd ../client && npm run build && cd ..",
+    "package": "cd client && npm run package && cd .."
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Azure-Samples/communication-services-openai-sample.git"
+  },
+  "author": "",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/Azure-Samples/communication-services-openai-sample/issues"
+  },
+  "homepage": "https://github.com/Azure-Samples/communication-services-openai-sample#readme",
+  "devDependencies": {
+    "http-errors": "^2.0.0"
+  }
+}

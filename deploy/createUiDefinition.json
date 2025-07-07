@@ -1,0 +1,185 @@
+{
+  "$schema": "https://schema.management.azure.com/schemas/0.1.2-preview/CreateUIDefinition.MultiVm.json#",
+  "handler": "Microsoft.Azure.CreateUIDef",
+  "version": "0.1.2-preview",
+  "parameters": {
+    "basics": [
+      {
+        "name": "appName",
+        "type": "Microsoft.Common.TextBox",
+        "label": "Web App Name",
+        "placeholder": "myapp",
+        "toolTip": "Name for the web app (must be globally unique)",
+        "constraints": {
+          "required": true,
+          "regex": "^[a-z0-9A-Z-]{2,60}$",
+          "validationMessage": "Only alphanumeric characters and hyphens are allowed, and the value must be 2-60 characters long."
+        }
+      }
+    ],
+    "steps": [
+      {
+        "name": "openAiConfig",
+        "label": "OpenAI Configuration",
+        "elements": [
+          {
+            "name": "openAiOption",
+            "type": "Microsoft.Common.OptionsGroup",
+            "label": "OpenAI Service Option",
+            "defaultValue": "Create new",
+            "toolTip": "Choose whether to use an existing OpenAI service or create a new one",
+            "constraints": {
+              "allowedValues": [
+                {
+                  "label": "Create new",
+                  "value": "new"
+                },
+                {
+                  "label": "Use existing",
+                  "value": "existing"
+                }
+              ],
+              "required": true
+            },
+            "visible": true
+          },
+          {
+            "name": "existingOpenAi",
+            "type": "Microsoft.Solutions.ResourceSelector",
+            "label": "Select existing OpenAI Service",
+            "toolTip": "Select an existing OpenAI service from your subscription",
+            "resourceType": "Microsoft.CognitiveServices/accounts",
+            "options": {
+              "filter": {
+                "subscription": "onBasics",
+                "location": "all"
+              }
+            },
+            "visible": "[equals(steps('openAiConfig').openAiOption, 'existing')]"
+          },
+          {
+            "name": "newOpenAiName",
+            "type": "Microsoft.Common.TextBox",
+            "label": "New OpenAI Service Name",
+            "placeholder": "myopenai",
+            "toolTip": "Name for the new OpenAI service (must be globally unique)",
+            "constraints": {
+              "required": "[equals(steps('openAiConfig').openAiOption, 'new')]",
+              "regex": "^[a-z0-9][a-z0-9-]{0,62}$",
+              "validationMessage": "Must start with letter or number, only lowercase letters, numbers and hyphens allowed, 2-64 characters."
+            },
+            "visible": "[equals(steps('openAiConfig').openAiOption, 'new')]"
+          },
+          {
+            "name": "openAiLocation",
+            "type": "Microsoft.Common.DropDown",
+            "label": "OpenAI Location",
+            "placeholder": "Select a location",
+            "defaultValue": "East US",
+            "toolTip": "Location for Azure OpenAI (only regions with gpt-4o-realtime-preview)",
+            "constraints": {
+              "allowedValues": [
+                {
+                  "label": "East US",
+                  "value": "eastus"
+                },
+                {
+                  "label": "East US 2",
+                  "value": "eastus2"
+                },
+                {
+                  "label": "Sweden Central",
+                  "value": "swedencentral"
+                }
+              ],
+              "required": true
+            },
+            "visible": "[equals(steps('openAiConfig').openAiOption, 'new')]"
+          },
+          {
+            "name": "modelCapacity",
+            "type": "Microsoft.Common.Slider",
+            "min": 1,
+            "max": 100,
+            "label": "Model Capacity (TPM in thousands)",
+            "defaultValue": 10,
+            "showStepMarkers": false,
+            "toolTip": "Tokens per minute capacity for the model deployment",
+            "constraints": {
+              "required": true
+            },
+            "visible": true
+          }
+        ]
+      },
+      {
+        "name": "appConfig",
+        "label": "Application Configuration",
+        "elements": [
+          {
+            "name": "appServicePlanSku",
+            "type": "Microsoft.Common.DropDown",
+            "label": "App Service Plan SKU",
+            "placeholder": "Select a SKU",
+            "defaultValue": "B1",
+            "toolTip": "The pricing tier for the App Service Plan",
+            "constraints": {
+              "allowedValues": [
+                {
+                  "label": "B1 (Basic)",
+                  "value": "B1"
+                },
+                {
+                  "label": "B2 (Basic)",
+                  "value": "B2"
+                },
+                {
+                  "label": "B3 (Basic)",
+                  "value": "B3"
+                },
+                {
+                  "label": "S1 (Standard)",
+                  "value": "S1"
+                },
+                {
+                  "label": "S2 (Standard)",
+                  "value": "S2"
+                },
+                {
+                  "label": "S3 (Standard)",
+                  "value": "S3"
+                }
+              ],
+              "required": true
+            },
+            "visible": true
+          },
+          {
+            "name": "packageUrl",
+            "type": "Microsoft.Common.TextBox",
+            "label": "Deployment Package URL (Optional)",
+            "placeholder": "https://example.com/package.zip",
+            "toolTip": "URL to the deployment package (leave empty if deploying code separately)",
+            "constraints": {
+              "required": false,
+              "regex": "^(https?://.+)?$",
+              "validationMessage": "Must be a valid HTTP or HTTPS URL"
+            },
+            "visible": true
+          }
+        ]
+      }
+    ],
+    "outputs": {
+      "appName": "[basics('appName')]",
+      "openAiServiceName": "[if(equals(steps('openAiConfig').openAiOption, 'existing'), last(split(steps('openAiConfig').existingOpenAi.id, '/')), steps('openAiConfig').newOpenAiName)]",
+      "location": "[location()]",
+      "openAiLocation": "[if(equals(steps('openAiConfig').openAiOption, 'existing'), reference(steps('openAiConfig').existingOpenAi.id, '2023-05-01', 'Full').location, steps('openAiConfig').openAiLocation)]",
+      "appServicePlanSku": "[steps('appConfig').appServicePlanSku]",
+      "modelName": "gpt-4o-realtime-preview",
+      "modelVersion": "2024-10-01-preview",
+      "modelCapacity": "[steps('openAiConfig').modelCapacity]",
+      "packageUrl": "[steps('appConfig').packageUrl]"
+    }
+  }
+}

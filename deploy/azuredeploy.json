@@ -1,0 +1,255 @@
+{
+  "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
+  "contentVersion": "1.0.0.0",
+  "parameters": {
+    "appName": {
+      "type": "string",
+      "metadata": {
+        "description": "Name for the web app (must be globally unique)"
+      }
+    },
+    "openAiServiceName": {
+      "type": "string",
+      "metadata": {
+        "description": "Name of the Azure OpenAI Service (must be globally unique)"
+      }
+    },
+    "createNewOpenAi": {
+      "type": "bool",
+      "defaultValue": true,
+      "metadata": {
+        "description": "Whether to create a new OpenAI service or use existing"
+      }
+    },
+    "location": {
+      "type": "string",
+      "defaultValue": "[resourceGroup().location]",
+      "metadata": {
+        "description": "Location for all resources except OpenAI"
+      }
+    },
+    "openAiLocation": {
+      "type": "string",
+      "defaultValue": "eastus",
+      "allowedValues": [
+        "eastus",
+        "eastus2",
+        "swedencentral"
+      ],
+      "metadata": {
+        "description": "Location for Azure OpenAI (only regions with gpt-4o-realtime-preview)"
+      }
+    },
+    "appServicePlanSku": {
+      "type": "string",
+      "defaultValue": "B1",
+      "allowedValues": [
+        "B1",
+        "B2",
+        "B3",
+        "S1",
+        "S2",
+        "S3"
+      ],
+      "metadata": {
+        "description": "App Service Plan SKU"
+      }
+    },
+    "modelName": {
+      "type": "string",
+      "defaultValue": "gpt-4o-realtime-preview",
+      "metadata": {
+        "description": "OpenAI Model to deploy"
+      }
+    },
+    "modelVersion": {
+      "type": "string",
+      "defaultValue": "2024-10-01-preview",
+      "metadata": {
+        "description": "Model version"
+      }
+    },
+    "modelCapacity": {
+      "type": "int",
+      "defaultValue": 10,
+      "metadata": {
+        "description": "Model capacity (TPM in thousands)"
+      }
+    },
+    "packageUrl": {
+      "type": "string",
+      "defaultValue": "",
+      "metadata": {
+        "description": "URL to the deployment package (leave empty if deploying code separately)"
+      }
+    }
+  },
+  "variables": {
+    "commsName": "[concat('comms-', uniqueString(resourceGroup().id))]",
+    "appServicePlanName": "[concat('asp-', parameters('appName'))]",
+    "openAiDeploymentName": "[parameters('modelName')]",
+    "appInsightsName": "[concat('ai-', parameters('appName'))]"
+  },
+  "resources": [
+    {
+      "type": "Microsoft.Communication/communicationServices",
+      "apiVersion": "2023-03-31",
+      "name": "[variables('commsName')]",
+      "location": "global",
+      "properties": {
+        "dataLocation": "United States"
+      }
+    },
+    {
+      "condition": "[parameters('createNewOpenAi')]",
+      "type": "Microsoft.CognitiveServices/accounts",
+      "apiVersion": "2023-05-01",
+      "name": "[parameters('openAiServiceName')]",
+      "location": "[parameters('openAiLocation')]",
+      "kind": "OpenAI",
+      "sku": {
+        "name": "S0"
+      },
+      "properties": {
+        "customSubDomainName": "[parameters('openAiServiceName')]",
+        "publicNetworkAccess": "Enabled"
+      }
+    },
+    {
+      "type": "Microsoft.CognitiveServices/accounts/deployments",
+      "apiVersion": "2023-05-01",
+      "name": "[concat(parameters('openAiServiceName'), '/', variables('openAiDeploymentName'))]",
+      "dependsOn": [
+        "[resourceId('Microsoft.CognitiveServices/accounts', parameters('openAiServiceName'))]"
+      ],
+      "sku": {
+        "name": "Standard",
+        "capacity": "[parameters('modelCapacity')]"
+      },
+      "properties": {
+        "model": {
+          "format": "OpenAI",
+          "name": "[parameters('modelName')]",
+          "version": "[parameters('modelVersion')]"
+        }
+      }
+    },
+    {
+      "type": "Microsoft.Insights/components",
+      "apiVersion": "2020-02-02",
+      "name": "[variables('appInsightsName')]",
+      "location": "[parameters('location')]",
+      "kind": "web",
+      "properties": {
+        "Application_Type": "web"
+      }
+    },
+    {
+      "type": "Microsoft.Web/serverfarms",
+      "apiVersion": "2021-02-01",
+      "name": "[variables('appServicePlanName')]",
+      "location": "[parameters('location')]",
+      "sku": {
+        "name": "[parameters('appServicePlanSku')]"
+      },
+      "properties": {}
+    },
+    {
+      "type": "Microsoft.Web/sites",
+      "apiVersion": "2021-02-01",
+      "name": "[parameters('appName')]",
+      "location": "[parameters('location')]",
+      "dependsOn": [
+        "[resourceId('Microsoft.Web/serverfarms', variables('appServicePlanName'))]",
+        "[resourceId('Microsoft.Communication/communicationServices', variables('commsName'))]",
+        "[resourceId('Microsoft.CognitiveServices/accounts', parameters('openAiServiceName'))]",
+        "[resourceId('Microsoft.CognitiveServices/accounts/deployments', parameters('openAiServiceName'), variables('openAiDeploymentName'))]",
+        "[resourceId('Microsoft.Insights/components', variables('appInsightsName'))]"
+      ],
+      "properties": {
+        "serverFarmId": "[resourceId('Microsoft.Web/serverfarms', variables('appServicePlanName'))]",
+        "siteConfig": {
+          "webSocketsEnabled": true,
+          "nodeVersion": "~20",
+          "appSettings": [
+            {
+              "name": "WEBSITE_NODE_DEFAULT_VERSION",
+              "value": "~20"
+            },
+            {
+              "name": "RESOURCE_CONNECTION_STRING",
+              "value": "[listkeys(resourceId('Microsoft.Communication/communicationServices', variables('commsName')), '2023-03-31').primaryConnectionString]"
+            },
+            {
+              "name": "ENDPOINT_URL",
+              "value": "[reference(resourceId('Microsoft.Communication/communicationServices', variables('commsName')), '2023-03-31').hostName]"
+            },
+            {
+              "name": "AZURE_OPENAI_SERVICE_KEY",
+              "value": "[listKeys(resourceId('Microsoft.CognitiveServices/accounts', parameters('openAiServiceName')), '2023-05-01').key1]"
+            },
+            {
+              "name": "AZURE_OPENAI_SERVICE_ENDPOINT",
+              "value": "[reference(resourceId('Microsoft.CognitiveServices/accounts', parameters('openAiServiceName')), '2023-05-01').endpoint]"
+            },
+            {
+              "name": "AZURE_OPENAI_SERVICE_DEPLOYMENT_MODEL_NAME",
+              "value": "[variables('openAiDeploymentName')]"
+            },
+            {
+              "name": "SERVER_CALLBACK_URI",
+              "value": "[concat('https://', reference(resourceId('Microsoft.Web/sites', parameters('appName')), '2021-02-01').defaultHostName)]"
+            },
+            {
+              "name": "SERVER_CALLBACK_URI_PORT",
+              "value": "443"
+            },
+            {
+              "name": "APPINSIGHTS_INSTRUMENTATIONKEY",
+              "value": "[reference(resourceId('Microsoft.Insights/components', variables('appInsightsName')), '2020-02-02').InstrumentationKey]"
+            },
+            {
+              "name": "APPLICATIONINSIGHTS_CONNECTION_STRING",
+              "value": "[reference(resourceId('Microsoft.Insights/components', variables('appInsightsName')), '2020-02-02').ConnectionString]"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "type": "Microsoft.Web/sites/extensions",
+      "apiVersion": "2021-02-01",
+      "name": "[concat(parameters('appName'), '/MSDeploy')]",
+      "location": "[parameters('location')]",
+      "dependsOn": [
+        "[resourceId('Microsoft.Web/sites', parameters('appName'))]"
+      ],
+      "properties": {
+        "packageUri": "[parameters('packageUrl')]"
+      },
+      "condition": "[not(equals(parameters('packageUrl'), ''))]"
+    }
+  ],
+  "outputs": {
+    "webAppUrl": {
+      "type": "string",
+      "value": "[concat('https://', reference(resourceId('Microsoft.Web/sites', parameters('appName')), '2021-02-01').defaultHostName)]"
+    },
+    "communicationServiceEndpoint": {
+      "type": "string",
+      "value": "[reference(resourceId('Microsoft.Communication/communicationServices', variables('commsName')), '2023-03-31').hostName]"
+    },
+    "openAiEndpoint": {
+      "type": "string",
+      "value": "[reference(resourceId('Microsoft.CognitiveServices/accounts', parameters('openAiServiceName')), '2023-05-01').endpoint]"
+    },
+    "deploymentName": {
+      "type": "string",
+      "value": "[variables('openAiDeploymentName')]"
+    },
+    "appName": {
+      "type": "string",
+      "value": "[parameters('appName')]"
+    }
+  }
+}

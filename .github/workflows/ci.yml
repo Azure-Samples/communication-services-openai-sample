@@ -1,0 +1,64 @@
+name: CI
+
+on:
+  # Triggers the workflow on push or pull request events but only for the main branch
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+  # Allows you to run this workflow manually from the Actions tab
+  workflow_dispatch:
+
+jobs:
+  build_and_test:
+    name: Build and test
+    runs-on: windows-latest
+    steps:
+
+      - name: Checkout
+        uses: actions/checkout@v1
+
+      - name: Setup Node 22
+        uses: actions/setup-node@v2
+        with:
+          node-version: '22'
+
+      - name: Setup server dependencies
+        working-directory: ./server
+        run: |
+          npm install
+
+      - name: Build backend
+        working-directory: ./server
+        shell: bash
+        run: |
+          npm run build
+
+  clean_frontend:
+    name: Run clean code tests on frontend
+    runs-on: windows-latest
+    steps:
+
+      - name: Checkout
+        uses: actions/checkout@v1
+
+      - uses: actions/setup-node@v2
+        with:
+          node-version: '22'
+
+      - name: Install (dev) dependencies
+        working-directory: ./client
+        run: npm install
+
+      - name: Lint
+        working-directory: ./client
+        run: npm run lint
+
+      - name: Check all is pretty
+        working-directory: ./client
+        run: npm run prettier:check
+
+      - name: Build
+        working-directory: ./client
+        run: npm run build

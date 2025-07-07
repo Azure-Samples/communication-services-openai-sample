@@ -1,0 +1,45 @@
+name: Create Calling Sample Release
+
+on:
+  release:
+    types: [created]
+    name: Release  
+
+jobs:
+  release:
+    name: Release
+    permissions: 
+      contents: write
+      
+    runs-on: ubuntu-latest
+    steps:
+    
+      - name: Checkout
+        uses: actions/checkout@v1
+
+      - name: Setup Node 22
+        uses: actions/setup-node@v2
+        with:
+          node-version: '22'
+
+      - name: Build
+        shell: bash
+        run: |
+          release_name=OpenAi-Calling-Sample
+          unset CI
+          # Build everything
+          npm run setup
+          npm run build
+          npm run package
+
+          7z a -tzip -r "openai-calling-sample.zip" ./client/dist/*
+
+          # Delete output directory
+          # rm -r "./client/dist"
+
+      - name: Publish
+        uses: softprops/action-gh-release@v1
+        with:
+          files: "openai-calling-sample.zip"
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
