@@ -1,5 +1,5 @@
 // Copyright (c) Microsoft Corporation.
-// Licensed under the MIT License.
+// Licensed under the MIT license.
 
 import WebSocket from 'ws';
 import { config } from 'dotenv';
@@ -24,7 +24,7 @@ interface ConversationCallbacks {
   onSpeechEnd: () => void;
 }
 
-export async function sendAudioToExternalAi(data: string) {
+export async function sendAudioToExternalAi(data: string): Promise<void> {
   try {
     const audio = data;
     if (audio) {
@@ -93,7 +93,7 @@ export async function startConversation(callbacks?: ConversationCallbacks): Prom
   // );
 }
 
-async function startRealtime(endpoint: string, apiKey: string, deploymentOrModel: string) {
+async function startRealtime(endpoint: string, apiKey: string, deploymentOrModel: string): Promise<void> {
   try {
     realtimeStreaming = new LowLevelRTClient(new URL(endpoint), { key: apiKey }, { deployment: deploymentOrModel });
     console.log('sending session config');
@@ -113,7 +113,7 @@ async function startRealtime(endpoint: string, apiKey: string, deploymentOrModel
 }
 
 function createConfigMessage(): SessionUpdateMessage {
-  let configMessage: SessionUpdateMessage = {
+  const configMessage: SessionUpdateMessage = {
     type: 'session.update',
     session: {
       instructions: answerPromptSystemTemplate,
@@ -132,7 +132,7 @@ function createConfigMessage(): SessionUpdateMessage {
   return configMessage;
 }
 
-export async function handleRealtimeMessages() {
+export async function handleRealtimeMessages(): Promise<void> {
   for await (const message of realtimeStreaming.messages()) {
     console.log('Message type:', message.type);
     switch (message.type) {
@@ -165,11 +165,11 @@ export async function handleRealtimeMessages() {
   }
 }
 
-export async function initWebsocket(socket: WebSocket) {
+export async function initWebsocket(socket: WebSocket): Promise<void> {
   ws = socket;
 }
 
-async function stopAudio() {
+async function stopAudio(): Promise<void> {
   try {
     const jsonData = OutStreamingData.getStopAudioForOutbound();
     sendMessage(jsonData);
@@ -177,7 +177,7 @@ async function stopAudio() {
     console.log(e);
   }
 }
-async function receiveAudioForOutbound(data: string) {
+async function receiveAudioForOutbound(data: string): Promise<void> {
   try {
     const jsonData = OutStreamingData.getStreamingDataForOutbound(data);
     sendMessage(jsonData);
@@ -187,14 +187,14 @@ async function receiveAudioForOutbound(data: string) {
   }
 }
 
-export async function closeOpenAiService() {
+export async function closeOpenAiService(): Promise<void> {
   if (realtimeStreaming) {
     realtimeStreaming.close();
     console.log('OpenAI service connection closed.');
   }
 }
 
-async function sendMessage(data: string) {
+async function sendMessage(data: string): Promise<void> {
   if (ws.readyState === WebSocket.OPEN) {
     ws.send(data);
   } else {

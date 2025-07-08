@@ -1,5 +1,5 @@
 // Copyright (c) Microsoft Corporation.
-// Licensed under the MIT License.
+// Licensed under the MIT license.
 
 // Load environment variables first
 import 'dotenv/config';
@@ -18,7 +18,7 @@ server.on('listening', onListening);
 /**
  * Normalize a port into a number, string, or false.
  */
-function normalizePort(val: string) {
+function normalizePort(val: string): number | string | false {
   const portNum = parseInt(val, 10);
   if (isNaN(portNum)) {
     // named pipe
@@ -34,7 +34,7 @@ function normalizePort(val: string) {
 /**
  * Event listener for HTTP server "error" event.
  */
-function onError(error: NodeJS.ErrnoException) {
+function onError(error: NodeJS.ErrnoException): void {
   if (error.syscall !== 'listen') {
     throw error;
   }
@@ -57,7 +57,7 @@ function onError(error: NodeJS.ErrnoException) {
 /**
  * Event listener for HTTP server "listening" event.
  */
-function onListening() {
+function onListening(): void {
   const addr = server.address();
   const bind = typeof addr === 'string' ? 'pipe ' + addr : addr ? 'port ' + addr.port : '';
   console.log('Listening on ' + bind);

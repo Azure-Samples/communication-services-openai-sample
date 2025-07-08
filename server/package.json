@@ -6,7 +6,11 @@
     "start": "ts-node ./bin/www",
     "start:dev": "ts-node-dev ./bin/www",
     "build": "npm run clean && webpack --mode=production --env production",
-    "clean": "rimraf dist"
+    "clean": "rimraf dist",
+    "lint": "eslint .",
+    "lint:fix": "eslint . --fix",
+    "prettier": "prettier --no-error-on-unmatched-pattern --write --config ./.prettierrc --ignore-path=./.prettierignore \"**/*.js\" \"**/*.jsx\" \"**/*.ts\" \"**/*.tsx\"",
+    "prettier:check": "prettier --no-error-on-unmatched-pattern --check --config ./.prettierrc --ignore-path=./.prettierignore \"**/*.js\" \"**/*.jsx\" \"**/*.ts\" \"**/*.tsx\""
   },
   "dependencies": {
     "@azure/communication-call-automation": "1.4.0-beta.1",
@@ -24,19 +28,27 @@
     "@types/cors": "^2.8.8",
     "@types/express": "^5.0.3",
     "@types/morgan": "^1.9.2",
-    "@types/node": "^24.0.10",
+    "@types/node": "^24.0.11",
     "@types/ws": "^8.18.1",
+    "@typescript-eslint/eslint-plugin": "^8.36.0",
+    "@typescript-eslint/parser": "^8.36.0",
     "copy-webpack-plugin": "^13.0.0",
     "dotenv": "^10.0.0",
     "dotenv-expand": "^5.1.0",
+    "eslint": "^9.30.1",
+    "eslint-config-prettier": "^10.1.5",
+    "eslint-plugin-header": "^3.1.1",
+    "eslint-plugin-prettier": "^5.5.1",
+    "globals": "^16.3.0",
+    "rimraf": "^2.6.2",
     "ts-loader": "^9.5.2",
     "ts-node": "^10.0.0",
     "typescript": "^4.0.0",
+    "typescript-eslint": "^8.36.0",
     "webpack": "^5.99.9",
     "webpack-cli": "^6.0.1",
     "webpack-dev-server": "^5.2.2",
     "webpack-merge": "^6.0.1",
-    "webpack-node-externals": "^3.0.0",
-    "rimraf": "^2.6.2"
+    "webpack-node-externals": "^3.0.0"
   }
 }

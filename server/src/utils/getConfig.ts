@@ -1,8 +1,15 @@
 // Copyright (c) Microsoft Corporation.
-// Licensed under the MIT License.
+// Licensed under the MIT license.
 
 import dotenv from 'dotenv';
-import { ENV_AZURE_OPENAI_SERVICE_DEPLOYMENT_MODEL_NAME, ENV_AZURE_OPENAI_SERVICE_ENDPOINT, ENV_AZURE_OPENAI_SERVICE_KEY, ENV_ENDPOINT_URL, ENV_RESOURCE_CONNECTION_STRING, ENV_SERVER_CALLBACK_URI } from '../constants';
+import {
+  ENV_AZURE_OPENAI_SERVICE_DEPLOYMENT_MODEL_NAME,
+  ENV_AZURE_OPENAI_SERVICE_ENDPOINT,
+  ENV_AZURE_OPENAI_SERVICE_KEY,
+  ENV_ENDPOINT_URL,
+  ENV_RESOURCE_CONNECTION_STRING,
+  ENV_SERVER_CALLBACK_URI
+} from '../constants';
 import DefaultConfig from '../defaultConfig.json';
 
 // Load .env file if it exists
@@ -28,8 +35,11 @@ export const getServerConfig = (): ServerConfigSettings => {
     resourceConnectionString: process.env[ENV_RESOURCE_CONNECTION_STRING] || DefaultConfig.resourceConnectionString,
     endpointUrl: process.env[ENV_ENDPOINT_URL] || DefaultConfig.endpointUrl,
     azureOpenAiServiceKey: process.env[ENV_AZURE_OPENAI_SERVICE_KEY] || DefaultConfig.azureOpenAiServiceKey,
-    azureOpenAiServiceEndpoint: process.env[ENV_AZURE_OPENAI_SERVICE_ENDPOINT] || DefaultConfig.azureOpenAiServiceEndpoint,
-    azureOpenAiServiceDeploymentModelName: process.env[ENV_AZURE_OPENAI_SERVICE_DEPLOYMENT_MODEL_NAME] || DefaultConfig.azureOpenAiServiceDeploymentModelName,
+    azureOpenAiServiceEndpoint:
+      process.env[ENV_AZURE_OPENAI_SERVICE_ENDPOINT] || DefaultConfig.azureOpenAiServiceEndpoint,
+    azureOpenAiServiceDeploymentModelName:
+      process.env[ENV_AZURE_OPENAI_SERVICE_DEPLOYMENT_MODEL_NAME] ||
+      DefaultConfig.azureOpenAiServiceDeploymentModelName,
     callbackUri: process.env[ENV_SERVER_CALLBACK_URI] || DefaultConfig.callbackUri
   };
 
@@ -57,6 +67,6 @@ export const getClientConfig = (): ClientConfigSettings => {
   const serverConfig = {
     resourceConnectionString: config.resourceConnectionString,
     callbackUri: config.callbackUri
-  }
+  };
   return serverConfig;
-} 
+};

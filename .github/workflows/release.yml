@@ -1,4 +1,4 @@
-name: Create Calling Sample Release
+name: Create OpenAi Sample release
 
 on:
   release:

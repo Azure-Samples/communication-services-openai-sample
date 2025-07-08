@@ -12,7 +12,7 @@ export const OpenAiControlBar = ({ onHangup }: { onHangup: () => void }): JSX.El
 
   const onClose = useCallback(async (): Promise<void> => {
     await endCallProps.onHangUp();
-    onHangup;
+    onHangup();
   }, [endCallProps]);
 
   return (

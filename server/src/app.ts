@@ -1,5 +1,5 @@
 // Copyright (c) Microsoft Corporation.
-// Licensed under the MIT License.
+// Licensed under the MIT license.
 
 import dotenv from 'dotenv';
 dotenv.config();
@@ -32,21 +32,21 @@ import { tokenController } from './controllers/tokenController';
 const app = express();
 
 const allowedOrigins = [
-    'http://localhost:3000', // Your local client
-    // Add your production client URL here if it's on a different domain
+  'http://localhost:3000' // Your local client
+  // Add your production client URL here if it's on a different domain
 ];
 
 const corsOptions: cors.CorsOptions = {
-    origin: (origin, callback) => {
-        // Allow requests with no origin (like mobile apps or curl requests)
-        if (!origin) return callback(null, true);
-        if (allowedOrigins.indexOf(origin) === -1) {
-            const msg = 'The CORS policy for this site does not allow access from the specified Origin.';
-            return callback(new Error(msg), false);
-        }
-        return callback(null, true);
-    },
-    credentials: true,
+  origin: (origin, callback) => {
+    // Allow requests with no origin (like mobile apps or curl requests)
+    if (!origin) return callback(null, true);
+    if (allowedOrigins.indexOf(origin) === -1) {
+      const msg = 'The CORS policy for this site does not allow access from the specified Origin.';
+      return callback(new Error(msg), false);
+    }
+    return callback(null, true);
+  },
+  credentials: true
 };
 
 app.use(cors(corsOptions));
@@ -61,7 +61,7 @@ app.use(express.static(path.resolve(__dirname, 'build')));
 // Add this to your route registrations
 app.use('/createGroupCallWithAutomation', createGroupCallWithAutomation);
 
-app.use('/api/config', getClientConfig)
+app.use('/api/config', getClientConfig);
 
 app.use('/callAutomationEvent', callAutomationEvent);
 

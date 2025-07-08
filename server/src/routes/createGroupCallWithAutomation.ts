@@ -16,7 +16,7 @@ interface CreateGroupCallParam {
  *
  * @param groupId: id of the group to create a call for
  */
-router.post('/', async function (req, res, next) {
+router.post('/', async function (req, res) {
   const param: CreateGroupCallParam = req.body;
 
   try {

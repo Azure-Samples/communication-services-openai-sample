@@ -1,5 +1,5 @@
 // Copyright (c) Microsoft Corporation.
-// Licensed under the MIT License.
+// Licensed under the MIT license.
 
 import {
   CommunicationAccessToken,
@@ -26,7 +26,7 @@ export const getToken = (
   user: CommunicationUserIdentifier,
   scopes: TokenScope[]
 ): Promise<CommunicationAccessToken> => {
-  let scope = scopes ?? ['voip'];
+  const scope = scopes ?? ['voip'];
   return getIdentityClient().getToken(user, scope);
 };
 
@@ -37,6 +37,6 @@ export const getToken = (
  * @returns A promise that resolves to a CommunicationUserToken.
  */
 export const createUserAndToken = (scopes: TokenScope[]): Promise<CommunicationUserToken> => {
-  let scope = scopes ?? ['voip'];
-  return getIdentityClient().createUserAndToken(scopes);
+  const scope = scopes ?? ['voip'];
+  return getIdentityClient().createUserAndToken(scope);
 };

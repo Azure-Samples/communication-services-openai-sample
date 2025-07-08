@@ -1,3 +1,5 @@
+// Copyright (c) Microsoft Corporation.
+// Licensed under the MIT license.
 import * as express from 'express';
 import { closeOpenAiService, startConversation } from '../utils/azureOpenAiService';
 import { broadcastAgentConnectedStatus } from '../utils/sseClients';

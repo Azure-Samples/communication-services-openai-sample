@@ -1,12 +1,14 @@
+// Copyright (c) Microsoft Corporation.
+// Licensed under the MIT license.
 const path = require('path');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 const ESLintPlugin = require('eslint-webpack-plugin');
 
 module.exports = (env, argv) => {
   const isProduction = argv.mode === 'production';
-  
+
   return {
-    mode: argv.mode || 'development', 
+    mode: argv.mode || 'development',
     entry: './src/index.tsx',
     output: {
       path: path.resolve(__dirname, 'dist'),
@@ -29,31 +31,31 @@ module.exports = (env, argv) => {
         },
         {
           test: /\.svg$/,
-          use: ['@svgr/webpack', 'url-loader'],
+          use: ['@svgr/webpack', 'url-loader']
         },
         {
           test: /\.(png|jpg|jpeg|gif|ico)$/,
-          type: 'asset/resource',
-        },
-      ],
+          type: 'asset/resource'
+        }
+      ]
     },
     resolve: {
-      extensions: ['.tsx', '.ts', '.js', '.jsx'],
+      extensions: ['.tsx', '.ts', '.js', '.jsx']
     },
     plugins: [
       new HtmlWebpackPlugin({
         template: './public/index.html',
-        favicon: './public/favicon.ico',
+        favicon: './public/favicon.ico'
       }),
       new ESLintPlugin({
         extensions: ['js', 'jsx', 'ts', 'tsx'],
         exclude: 'node_modules',
-        fix: true,
-      }),
+        fix: true
+      })
     ],
     devServer: {
       static: {
-        directory: path.join(__dirname, 'public'),
+        directory: path.join(__dirname, 'public')
       },
       compress: true,
       port: 3000,
@@ -62,34 +64,34 @@ module.exports = (env, argv) => {
       proxy: {
         '/api': {
           target: 'http://localhost:8080',
-          changeOrigin: true,
+          changeOrigin: true
         },
         '/token': {
           target: 'http://localhost:8080',
-          changeOrigin: true,
+          changeOrigin: true
         },
         '/refreshToken': {
           target: 'http://localhost:8080',
-          changeOrigin: true,
+          changeOrigin: true
         },
         '/getEndpointUrl': {
           target: 'http://localhost:8080',
-          changeOrigin: true,
+          changeOrigin: true
         },
         '/createGroupCallWithAutomation': {
           target: 'http://localhost:8080',
-          changeOrigin: true,
+          changeOrigin: true
         },
         '/callAutomationEvent': {
           target: 'http://localhost:8080',
-          changeOrigin: true,
-        },
-      },
+          changeOrigin: true
+        }
+      }
     },
     performance: {
       hints: isProduction ? 'warning' : false,
       maxEntrypointSize: 512000,
-      maxAssetSize: 512000,
-    },
+      maxAssetSize: 512000
+    }
   };
 };
