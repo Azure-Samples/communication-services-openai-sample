@@ -6,8 +6,7 @@ module.exports = (env, argv) => {
   const isProduction = argv.mode === 'production';
   
   return {
-    // mode: 'development',
-    mode: 'production',
+    mode: argv.mode || 'development', 
     entry: './src/index.tsx',
     output: {
       path: path.resolve(__dirname, 'dist'),
@@ -52,7 +51,7 @@ module.exports = (env, argv) => {
         fix: true,
       }),
     ],
-    /*devServer: {
+    devServer: {
       static: {
         directory: path.join(__dirname, 'public'),
       },
@@ -91,6 +90,6 @@ module.exports = (env, argv) => {
       hints: isProduction ? 'warning' : false,
       maxEntrypointSize: 512000,
       maxAssetSize: 512000,
-    },*/
+    },
   };
 };

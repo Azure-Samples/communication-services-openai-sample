@@ -4,7 +4,8 @@
   "description": "Client application for the TypeScript server-client project.",
   "main": "src/index.js",
   "scripts": {
-    "start": "concurrently \"cd ../server && npm run start\" \"npm run start:app\"",
+    "start": "concurrently \"cd ../server && npm run start\" \"npm run start:prod\"",
+    "start:dev": "concurrently \"cd ../server && npm run start\" \"npm run start:app\"",
     "start:app": "webpack-cli serve --mode=development --env development",
     "start:prod": "node dist/server.js",
     "package": "copyfiles -E -u 3 \"../server/dist/**/*\" dist",
