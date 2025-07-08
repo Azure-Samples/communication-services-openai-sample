@@ -1,5 +1,3 @@
-![vv-banner.png](./docs/images/app-banner.png)
-
 # Azure Communication Services OpenAI Calling Sample
 
 [![Deploy to Azure](https://aka.ms/deploytoazurebutton)](https://portal.azure.com/#create/Microsoft.Template/uri/https%3A%2F%2Fraw.githubusercontent.com%2FAzure-Samples%2Fcommunication-services-openai-sample%2Fmain%2Fdeploy%2Fazuredeploy.json/createUIDefinitionUri/https%3A%2F%2Fraw.githubusercontent.com%2FAzure-Samples%2Fcommunication-services-openai-sample%2Fmain%2Fdeploy%2FcreateUiDefinition.json)
