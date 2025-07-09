@@ -2,11 +2,12 @@
 // Licensed under the MIT license.
 
 import WebSocket from 'ws';
+import * as rtClient from 'rt-client';
 import { config } from 'dotenv';
-import { LowLevelRTClient, SessionUpdateMessage } from 'rt-client';
 import { OutStreamingData } from '@azure/communication-call-automation';
 import { getServerConfig } from './getConfig';
 import { broadcastAgentConnectedStatus } from './sseClients';
+
 config();
 
 let ws: WebSocket;
@@ -17,7 +18,7 @@ const openAiDeploymentModel = getServerConfig().azureOpenAiServiceDeploymentMode
 
 const answerPromptSystemTemplate = `You are an AI assistant that helps people find information.`;
 
-let realtimeStreaming: LowLevelRTClient;
+let realtimeStreaming: rtClient.LowLevelRTClient;
 
 interface ConversationCallbacks {
   onSpeechStart: () => void;
@@ -95,7 +96,7 @@ export async function startConversation(callbacks?: ConversationCallbacks): Prom
 
 async function startRealtime(endpoint: string, apiKey: string, deploymentOrModel: string): Promise<void> {
   try {
-    realtimeStreaming = new LowLevelRTClient(new URL(endpoint), { key: apiKey }, { deployment: deploymentOrModel });
+    realtimeStreaming = new rtClient.LowLevelRTClient(new URL(endpoint), { key: apiKey }, { deployment: deploymentOrModel });
     console.log('sending session config');
     await realtimeStreaming.send(createConfigMessage());
     console.log('sent');
@@ -112,8 +113,8 @@ async function startRealtime(endpoint: string, apiKey: string, deploymentOrModel
   });
 }
 
-function createConfigMessage(): SessionUpdateMessage {
-  const configMessage: SessionUpdateMessage = {
+function createConfigMessage(): rtClient.SessionUpdateMessage {
+  const configMessage: rtClient.SessionUpdateMessage = {
     type: 'session.update',
     session: {
       instructions: answerPromptSystemTemplate,

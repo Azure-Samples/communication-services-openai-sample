@@ -164,7 +164,6 @@ export const OpenAiWidget = (props: { setIsOpenCallback: Dispatch<SetStateAction
     setIsFullscreen(false);
     setIsAgentSpeakingViewActive(false); // Deactivate the agent speaking view
     setIsOpenCallback(false);
-    currentCall?.hangUp(); // Hang up the call if it exists
   };
 
   const handleExitFullscreen = (): void => {

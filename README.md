@@ -44,14 +44,7 @@ npm run setup
 
 For local development, you can run the client and server processes in one terminal in the root folder.
 
-1.  **Build the sample:**
-    The server will run on port 8080.
-
-    ```bash
-    npm run build
-    ```
-
-2.  **Start the sample:**
+1.  **Start the sample:**
     The client development server will run on port 3000 and proxy API requests to the server on port 8080.
 
     ```bash
