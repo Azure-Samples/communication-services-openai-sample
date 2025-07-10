@@ -83,6 +83,13 @@
       "metadata": {
         "description": "URL to the deployment package (leave empty if deploying code separately)"
       }
+    },
+    "openAiPromptInstructions": {
+      "type": "string",
+      "defaultValue": "You are a helpful assistant. Answer the user's questions to the best of your ability.",
+      "metadata": {
+        "description": "The system prompt/instructions for the Azure OpenAI assistant."
+      }
     }
   },
   "variables": {
@@ -203,16 +210,16 @@
               "value": "[concat('https://', reference(resourceId('Microsoft.Web/sites', parameters('appName')), '2021-02-01').defaultHostName)]"
             },
             {
-              "name": "SERVER_CALLBACK_URI_PORT",
-              "value": "443"
-            },
-            {
               "name": "APPINSIGHTS_INSTRUMENTATIONKEY",
               "value": "[reference(resourceId('Microsoft.Insights/components', variables('appInsightsName')), '2020-02-02').InstrumentationKey]"
             },
             {
               "name": "APPLICATIONINSIGHTS_CONNECTION_STRING",
               "value": "[reference(resourceId('Microsoft.Insights/components', variables('appInsightsName')), '2020-02-02').ConnectionString]"
+            },
+            {
+              "name": "AZURE_OPENAI_PROMPT_INSTRUCTIONS",
+              "value": "[parameters('openAiPromptInstructions')]"
             }
           ]
         }

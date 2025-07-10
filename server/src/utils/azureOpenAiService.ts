@@ -16,7 +16,7 @@ const openAiServiceEndpoint = getServerConfig().azureOpenAiServiceEndpoint || ''
 const openAiKey = getServerConfig().azureOpenAiServiceKey || '';
 const openAiDeploymentModel = getServerConfig().azureOpenAiServiceDeploymentModelName || '';
 
-const answerPromptSystemTemplate = `You are an AI assistant that helps people find information.`;
+const answerPromptSystemTemplate = getServerConfig().azureOpenAiPromptInstructions || `You are an AI assistant that helps people find information.`;
 
 let realtimeStreaming: rtClient.LowLevelRTClient;
 
@@ -67,31 +67,6 @@ export async function startConversation(callbacks?: ConversationCallbacks): Prom
   }
 
   console.log('[AzureOpenAIService] Conversation turn (simulated) finished.');
-
-  // Uncomment and configure the following code to use Microsoft Cognitive Services Speech SDK for TTS
-  // import * as SpeechSDK from 'microsoft-cognitiveservices-speech-sdk';
-  // const speechConfig = SpeechSDK.SpeechConfig.fromSubscription("YourSpeechKey", "YourSpeechRegion");
-  // const synthesizer = new SpeechSDK.SpeechSynthesizer(speechConfig, undefined); // undefined for default speaker output
-
-  // synthesizer.synthesisStarted = (s, e) => {
-  //   console.log('[TTS] Synthesis started.');
-  //   if (callbacks?.onSpeechStart) callbacks.onSpeechStart();
-  // };
-
-  // synthesizer.synthesisCompleted = (s, e) => {
-  //   console.log('[TTS] Synthesis completed.');
-  //   // Note: synthesisCompleted might fire before audio playback is fully done on the client if streaming.
-  //   // You might need to rely on events from the Call Automation service for actual audio playback end,
-  //   // or ensure your TTS mechanism signals when audio *output* is complete.
-  //   // For simplicity, we use it here, but be aware of this nuance.
-  //   if (callbacks?.onSpeechEnd) callbacks.onSpeechEnd();
-  // };
-
-  // synthesizer.speakTextAsync(
-  //   botResponseText,
-  //   result => { /* Handle result */ },
-  //   error => { /* Handle error */ }
-  // );
 }
 
 async function startRealtime(endpoint: string, apiKey: string, deploymentOrModel: string): Promise<void> {

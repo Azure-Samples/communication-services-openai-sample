@@ -3,6 +3,7 @@
 
 import dotenv from 'dotenv';
 import {
+  ENV_AZURE_OPENAI_PROMPT_INSTRUCTIONS,
   ENV_AZURE_OPENAI_SERVICE_DEPLOYMENT_MODEL_NAME,
   ENV_AZURE_OPENAI_SERVICE_ENDPOINT,
   ENV_AZURE_OPENAI_SERVICE_KEY,
@@ -11,6 +12,7 @@ import {
   ENV_SERVER_CALLBACK_URI
 } from '../constants';
 import DefaultConfig from '../defaultConfig.json';
+import { defaultPrompt } from '../defaultPrompt';
 
 // Load .env file if it exists
 dotenv.config();
@@ -22,6 +24,7 @@ export interface ServerConfigSettings {
   azureOpenAiServiceEndpoint: string;
   azureOpenAiServiceDeploymentModelName: string;
   callbackUri: string;
+  azureOpenAiPromptInstructions: string;
 }
 
 export interface ClientConfigSettings {
@@ -40,7 +43,8 @@ export const getServerConfig = (): ServerConfigSettings => {
     azureOpenAiServiceDeploymentModelName:
       process.env[ENV_AZURE_OPENAI_SERVICE_DEPLOYMENT_MODEL_NAME] ||
       DefaultConfig.azureOpenAiServiceDeploymentModelName,
-    callbackUri: process.env[ENV_SERVER_CALLBACK_URI] || DefaultConfig.callbackUri
+    callbackUri: process.env[ENV_SERVER_CALLBACK_URI] || DefaultConfig.callbackUri,
+    azureOpenAiPromptInstructions: process.env[ENV_AZURE_OPENAI_PROMPT_INSTRUCTIONS] || defaultPrompt
   };
 
   // Optionally, you can add validation to ensure all required fields are present
