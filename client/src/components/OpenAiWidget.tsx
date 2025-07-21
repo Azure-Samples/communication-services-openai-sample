@@ -1,7 +1,6 @@
 // Copyright (c) Microsoft Corporation.
 // Licensed under the MIT license.
 import { useState, useEffect, useRef, SetStateAction, Dispatch } from 'react';
-import { FullscreenAgentView } from './FullscreenAgentView';
 import * as styles from '../styles/OpenAiWidget.styles';
 import { Call } from '@azure/communication-calling';
 import { connectCallAutomationToGroupCall } from '../utils/callAutomationUtils';
@@ -29,7 +28,6 @@ export const OpenAiWidget = (props: { setIsOpenCallback: Dispatch<SetStateAction
 
   const [isAgentSpeakingViewActive, setIsAgentSpeakingViewActive] = useState(false); // Renamed for clarity
   const [isLoading, setIsLoading] = useState(false);
-  const [isFullscreen, setIsFullscreen] = useState(false);
   const [currentCall, setCurrentCall] = useState<Call | undefined>(undefined);
   const [clientConfig, setClientConfig] = useState<AppConfigModel>();
   const callAutomationStarted = useRef(false);
@@ -135,7 +133,6 @@ export const OpenAiWidget = (props: { setIsOpenCallback: Dispatch<SetStateAction
       if (currentCall?.state === 'Disconnected') {
         console.log('Call ended, resetting state.');
         setIsAgentSpeakingViewActive(false); // Reset when call ends
-        setIsFullscreen(false); // Reset fullscreen state
         setCurrentCall(undefined); // Clear the current call
         callAutomationStarted.current = false;
       }
@@ -161,13 +158,8 @@ export const OpenAiWidget = (props: { setIsOpenCallback: Dispatch<SetStateAction
   };
 
   const closeAll = (): void => {
-    setIsFullscreen(false);
     setIsAgentSpeakingViewActive(false); // Deactivate the agent speaking view
     setIsOpenCallback(false);
-  };
-
-  const handleExitFullscreen = (): void => {
-    setIsFullscreen(false);
   };
 
   if (isAgentSpeakingViewActive && statefulCallClient && currentCall && !isLoading) {
@@ -175,15 +167,7 @@ export const OpenAiWidget = (props: { setIsOpenCallback: Dispatch<SetStateAction
       <CallClientProvider callClient={statefulCallClient}>
         <CallAgentProvider callAgent={callAgent}>
           <CallProvider call={currentCall}>
-            {isFullscreen ? (
-              <FullscreenAgentView onClose={closeAll} onExitFullscreen={handleExitFullscreen} />
-            ) : (
-              <OpenAiWidgetCallScreen
-                currentCall={currentCall}
-                onFullscreen={() => setIsFullscreen(true)}
-                onHangup={closeAll}
-              />
-            )}
+            <OpenAiWidgetCallScreen currentCall={currentCall} onHangup={closeAll} />
           </CallProvider>
         </CallAgentProvider>
       </CallClientProvider>

@@ -10,23 +10,15 @@ import { FullscreenEnterIcon, LogoIcon } from './constants';
 
 interface OpenAiWidgetCallScreenProps {
   currentCall: Call;
-  onFullscreen: () => void;
   onHangup: () => void;
 }
 
-export const OpenAiWidgetCallScreen = ({
-  currentCall,
-  onFullscreen,
-  onHangup
-}: OpenAiWidgetCallScreenProps): JSX.Element => {
+export const OpenAiWidgetCallScreen = ({ currentCall, onHangup }: OpenAiWidgetCallScreenProps): JSX.Element => {
   const currentPulsatingLogoWrapperStyle = { ...styles.cardPulsatingLogoWrapperStyle, animation: 'pulse 2s infinite' };
 
   return (
     <CallProvider call={currentCall}>
       <Stack style={styles.agentSpeakingCardStyle}>
-        <button style={styles.fullscreenButtonStyle} onClick={onFullscreen} aria-label="Enter Fullscreen">
-          <FullscreenEnterIcon />
-        </button>
         <Stack style={currentPulsatingLogoWrapperStyle}>
           <LogoIcon size={50} />
         </Stack>

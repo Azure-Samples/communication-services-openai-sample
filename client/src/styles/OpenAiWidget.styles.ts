@@ -102,8 +102,7 @@ export const cardPulsatingLogoWrapperStyle: CSSProperties = {
 export const fullscreenPulsatingLogoWrapperStyle: CSSProperties = {
   ...pulsatingLogoWrapperBaseStyle,
   width: '7.5rem', // 120px
-  height: '7.5rem', // 120px
-  marginTop: '5rem' // 80px
+  height: '7.5rem' // 120px
 };
 
 export const titleStyle: CSSProperties = {
@@ -181,8 +180,7 @@ export const fullscreenAgentSpeakingTextStyleContoso: CSSProperties = {
 export const fullscreenAgentSpeakingTextStyleStatus: CSSProperties = {
   ...agentSpeakingTextBaseStyle,
   fontSize: '1.5rem', // 24px
-  fontWeight: 'bold',
-  marginBottom: 'auto'
+  fontWeight: 'bold'
 };
 
 export const iconButtonContainerStyle: CSSProperties = {

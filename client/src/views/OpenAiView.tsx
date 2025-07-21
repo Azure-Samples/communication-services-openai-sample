@@ -10,7 +10,7 @@ export const OpenAiView = (): JSX.Element => {
 
   return (
     <>
-      <GetAdviceButton setIsOpenCallback={setIsOpen} />
+      {!isOpen && <GetAdviceButton setIsOpenCallback={setIsOpen} />}
       {isOpen && <OpenAiWidget setIsOpenCallback={setIsOpen} />}
     </>
   );
