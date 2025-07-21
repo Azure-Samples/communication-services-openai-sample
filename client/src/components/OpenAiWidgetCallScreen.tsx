@@ -6,7 +6,7 @@ import { Stack } from '@fluentui/react';
 import * as styles from '../styles/OpenAiWidget.styles';
 import { Call } from '@azure/communication-calling';
 import { OpenAiControlBar } from './OpenAiControlBar';
-import { FullscreenEnterIcon, LogoIcon } from './constants';
+import { LogoIcon } from './constants';
 
 interface OpenAiWidgetCallScreenProps {
   currentCall: Call;

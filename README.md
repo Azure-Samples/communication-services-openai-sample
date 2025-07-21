@@ -8,7 +8,6 @@ This sample is a web application that demonstrates how to integrate Azure Commun
 - **Advanced Call Automation**: Uses the Azure Communication Services [Call Automation SDK](https://learn.microsoft.com/azure/communication-services/concepts/call-automation/call-automation) to manage call flows and media streaming.
 - **Live Status Updates**: Leverages Server-Sent Events (SSE) to push real-time status updates (e.g., "Agent is connected") from the server to the client.
 -**Modern UI**: A responsive and mobile-friendly user interface built with React and Fluent UI.
-- **One-Click Deployment**: Includes an ARM template to quickly deploy all required Azure resources.
 - **Open Source & Customizable**: The app is fully customizable, allowing you to adapt the AI agent's behavior and the UI to your needs.
 
 ## Code Structure

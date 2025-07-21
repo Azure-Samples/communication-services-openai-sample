@@ -20,11 +20,6 @@ const answerPromptSystemTemplate = getServerConfig().azureOpenAiPromptInstructio
 
 let realtimeStreaming: rtClient.LowLevelRTClient;
 
-interface ConversationCallbacks {
-  onSpeechStart: () => void;
-  onSpeechEnd: () => void;
-}
-
 export async function sendAudioToExternalAi(data: string): Promise<void> {
   try {
     const audio = data;
@@ -39,34 +34,10 @@ export async function sendAudioToExternalAi(data: string): Promise<void> {
   }
 }
 
-export async function startConversation(callbacks?: ConversationCallbacks): Promise<void> {
+export async function startConversation(): Promise<void> {
   console.log('[AzureOpenAIService] Starting conversation...');
   await startRealtime(openAiServiceEndpoint, openAiKey, openAiDeploymentModel);
-
-  // Example: Simulate getting a response from OpenAI
-  const botResponseText = "Hello, I am Contoso's AI assistant. How can I help you today?";
-  console.log(`[AzureOpenAIService] OpenAI response: "${botResponseText}"`);
-
-  if (botResponseText && callbacks?.onSpeechStart) {
-    console.log('[AzureOpenAIService] Initiating TTS, calling onSpeechStart.');
-    callbacks.onSpeechStart();
-  }
-
-  const simulatedSpeechDuration = botResponseText.length * 100; // Rough estimate: 100ms per char
-
-  if (botResponseText) {
-    console.log(`[AzureOpenAIService] Simulating TTS playback for ${simulatedSpeechDuration}ms.`);
-    await new Promise((resolve) => setTimeout(resolve, simulatedSpeechDuration));
-
-    if (callbacks?.onSpeechEnd) {
-      console.log('[AzureOpenAIService] Simulated TTS finished, calling onSpeechEnd.');
-      callbacks.onSpeechEnd();
-    }
-  } else if (callbacks?.onSpeechEnd) {
-    // If there was no text to speak, ensure onSpeechEnd is called if onSpeechStart was.
-  }
-
-  console.log('[AzureOpenAIService] Conversation turn (simulated) finished.');
+  console.log('[AzureOpenAIService] Conversation started.');
 }
 
 async function startRealtime(endpoint: string, apiKey: string, deploymentOrModel: string): Promise<void> {

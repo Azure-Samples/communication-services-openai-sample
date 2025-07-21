@@ -23,7 +23,7 @@ router.post('/', async (req: any, res: any) => {
     console.log(`Operation context:--> ${eventData.operationContext}`);
     console.log(`Call connection ID:--> ${callConnectionId}`);
     // Start the conversation with OpenAI service
-    await startConversation(callConnectionId);
+    await startConversation();
     broadcastAgentConnectedStatus(true); // Notify that the agent is connected
   } else if (event.type === 'Microsoft.Communication.MediaStreamingStarted') {
     console.log(`Operation context:--> ${eventData.operationContext}`);
