@@ -14,7 +14,6 @@ This sample is a web application that demonstrates how to integrate Azure Commun
 
 - **/client**: Frontend client application built with React and TypeScript.
 - **/server**: Backend server application built with Node.js and Express.
-- **/deploy**: ARM templates (`azuredeploy.json`, `createUiDefinition.json`) for easy deployment to Azure.
 
 ## Local Setup
 
@@ -22,9 +21,9 @@ This sample is a web application that demonstrates how to integrate Azure Commun
 
 - An Azure account with an active subscription. [Create an account for free](https://azure.microsoft.com/free/).
 - An active Communication Services resource. [Create a Communication Services resource](https://docs.microsoft.com/azure/communication-services/quickstarts/create-communication-resource).
-- An active Azure OpenAI resource with a model deployed (e.g., `gpt-4o-realtime-preview` `gpt-4o-mini-realtime-preview`).
+- An active Azure OpenAI resource with a model deployed (e.g., `gpt-4o-realtime-preview` `gpt-4o-mini-realtime-preview`). See [inustrctions](https://learn.microsoft.com/en-us/azure/ai-foundry/openai/how-to/create-resource?pivots=web-portal)
 - [Node.js (22.0.0 and above)](https://nodejs.org/en/download/)
-- The `rt-client` package, which is required for real-time audio processin from the [aoai-realtime-audio-sdk releases page](https://github.com/Azure-Samples/aoai-realtime-audio-sdk/).
+- The `rt-client` package, which is required for real-time audio processing from the [aoai-realtime-audio-sdk releases page](https://github.com/Azure-Samples/aoai-realtime-audio-sdk/).
 - For local development, Azure Dev Tunnels. For details, see [Enable dev tunnel](https://learn.microsoft.com/en-us/azure/developer/dev-tunnels/get-started).
 
 
@@ -56,7 +55,7 @@ like Azure DevTunnels. For details, see [Enable dev tunnel](https://learn.micros
     The client development server will run on port 3000 and proxy API requests to the server on port 8080.
 
     ```bash
-    npm run start:dev
+    npm run start
     ```
 
 ### Environment Variables
