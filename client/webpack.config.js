@@ -42,6 +42,45 @@ module.exports = (env, argv) => {
     resolve: {
       extensions: ['.tsx', '.ts', '.js', '.jsx']
     },
+    devServer: {
+      static: {
+        directory: path.join(__dirname, 'public')
+      },
+      compress: true,
+      port: 3000,
+      hot: true,
+      client: {
+        webSocketURL: 'auto://0.0.0.0:0/ws'
+      },
+      allowedHosts: 'all',
+      historyApiFallback: true,
+      proxy: {
+        '/api': {
+          target: 'http://[::1]:8080',
+          changeOrigin: true
+        },
+        '/token': {
+          target: 'http://[::1]:8080',
+          changeOrigin: true
+        },
+        '/refreshToken': {
+          target: 'http://[::1]:8080',
+          changeOrigin: true
+        },
+        '/getEndpointUrl': {
+          target: 'http://[::1]:8080',
+          changeOrigin: true
+        },
+        '/createGroupCallWithAutomation': {
+          target: 'http://[::1]:8080',
+          changeOrigin: true
+        },
+        '/callAutomationEvent': {
+          target: 'http://[::1]:8080',
+          changeOrigin: true
+        }
+      }
+    },
     plugins: [
       new HtmlWebpackPlugin({
         template: './public/index.html',
@@ -53,41 +92,6 @@ module.exports = (env, argv) => {
         fix: true
       })
     ],
-    devServer: {
-      static: {
-        directory: path.join(__dirname, 'public')
-      },
-      compress: true,
-      port: 3000,
-      hot: true,
-      historyApiFallback: true,
-      proxy: {
-        '/api': {
-          target: 'http://localhost:8080',
-          changeOrigin: true
-        },
-        '/token': {
-          target: 'http://localhost:8080',
-          changeOrigin: true
-        },
-        '/refreshToken': {
-          target: 'http://localhost:8080',
-          changeOrigin: true
-        },
-        '/getEndpointUrl': {
-          target: 'http://localhost:8080',
-          changeOrigin: true
-        },
-        '/createGroupCallWithAutomation': {
-          target: 'http://localhost:8080',
-          changeOrigin: true
-        },
-        '/callAutomationEvent': {
-          target: 'http://localhost:8080',
-          changeOrigin: true
-        }
-      }
-    },
     performance: {
       hints: isProduction ? 'warning' : false,
       maxEntrypointSize: 512000,

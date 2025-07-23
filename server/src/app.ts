@@ -32,15 +32,23 @@ import { tokenController } from './controllers/tokenController';
 const app = express();
 
 const allowedOrigins = [
-  'http://localhost:3000' // Your local client
-  // Add your production client URL here if it's on a different domain
+  "http://localhost:3000", // Example: add your frontend URL here
+  getServerConfig().clientOriginUrl
+  
 ];
 
 const corsOptions: cors.CorsOptions = {
   origin: (origin, callback) => {
     // Allow requests with no origin (like mobile apps or curl requests)
     if (!origin) return callback(null, true);
-    if (allowedOrigins.indexOf(origin) === -1) {
+    if (
+      origin.startsWith('https://') &&
+      origin.endsWith('.app.github.dev')
+    ) {
+      return callback(null, true);
+    }
+    const normalizedOrigin = origin.replace(/\/$/, '');
+    if (!allowedOrigins.map(o => o.replace(/\/$/, '')).includes(normalizedOrigin)) {
       const msg = 'The CORS policy for this site does not allow access from the specified Origin.';
       return callback(new Error(msg), false);
     }
@@ -50,8 +58,6 @@ const corsOptions: cors.CorsOptions = {
 };
 
 app.use(cors(corsOptions));
-
-app.use(logger('tiny'));
 
 app.use(logger('tiny'));
 app.use(express.json({ limit: '50mb' }));
@@ -98,7 +104,7 @@ const identityClient = new CommunicationIdentityClient(getServerConfig().resourc
 
 app.get('/api/token', tokenController(identityClient));
 
-const port = parseInt(process.env.PORT ?? '8080');
+const port = parseInt('8080');
 app.set('port', port);
 
 /**

@@ -4,5 +4,6 @@
   "azureOpenAiServiceKey": "APIKeyAzureOpenAIService",
   "azureOpenAiServiceEndpoint": "EndpointAzureOpenAIService",
   "azureOpenAiServiceDeploymentModelName": "gpt-4o-realtime-preview",
-  "callbackUri": "https://AzureAppServiceCallBackUri"
+  "callbackUri": "https://AzureAppServiceCallBackUri",
+  "clientOriginUrl": "https://localhost:3000"
 } 

@@ -50,7 +50,9 @@ export const OpenAiWidget = (props: { setIsOpenCallback: Dispatch<SetStateAction
       return;
     }
     const eventSource = new EventSource(`${clientConfig?.callbackUri}/api/agentStatusEvents`); // Ensure this path is correct
+    console.log('SSE: Connecting to server for agent status events...');
     eventSource.onmessage = (event) => {
+      console.log('SSE: Received message from server:', event.data);
       try {
         const serverEvent = JSON.parse(event.data);
         if (serverEvent.type === 'agentConnectedStatus') {
@@ -102,8 +104,8 @@ export const OpenAiWidget = (props: { setIsOpenCallback: Dispatch<SetStateAction
       }
       const statefulClient = createStatefulCallClient({ userId: userIdentifier });
       setStatefulCallClient(statefulClient);
+      console.log('Stateful client created', statefulClient);
     }
-    console.log('Stateful client created', statefulCallClient);
   }, [userIdentifier, setStatefulCallClient, statefulCallClient]);
 
   useEffect(() => {
@@ -124,6 +126,7 @@ export const OpenAiWidget = (props: { setIsOpenCallback: Dispatch<SetStateAction
           try {
             console.log('Connecting to call automation...');
             connectCallAutomationToGroupCall(currentCall);
+            console.log('Successfully connected to call automation.');
           } catch (e) {
             console.error('Error connecting to call automation:', e);
             callAutomationStarted.current = false;

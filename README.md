@@ -27,40 +27,109 @@ This sample is a web application that demonstrates how to integrate Azure Commun
 - For local development, Azure Dev Tunnels. For details, see [Enable dev tunnel](https://learn.microsoft.com/en-us/azure/developer/dev-tunnels/get-started).
 
 
-### Install Dependencies
+### Setup and Run
 
-Run `npm run setup` from both the `\` root folder to install the dependencies for each project.
+You can run the sample in two ways: **locally** (using Azure DevTunnel) or **in GitHub Codespaces**.
+
+#### 1. Local Development (using Azure DevTunnel)
+
+**Step 1: Install dependencies**
+
+From the **root of the project folder**, run:
 
 ```bash
 npm run setup
-
 ```
 
-### Setup and Run
+**Step 2: Install Azure DevTunnel CLI**  
+If you haven't already, follow the instructions at [Enable dev tunnel](https://learn.microsoft.com/en-us/azure/developer/dev-tunnels/get-started) to install the DevTunnel CLI.
 
-For local development, you can run the client and server processes in one terminal in the root folder.
-However, for the server callbacks you will need to host/share local web services through persistent endpoint
-like Azure DevTunnels. For details, see [Enable dev tunnel](https://learn.microsoft.com/en-us/azure/developer/dev-tunnels/get-started).
+**Step 3: Create your DevTunnel (run once):**  
+You only need to run these commands once to create your tunnel and expose port 8080:
 
-1. **Setup and hose your Azure DevTunnel**
-    [Azure DevTunnels](https://learn.microsoft.com/en-us/azure/developer/dev-tunnels/overview) is an Azure service that enables you to share local web services hosted on the internet. Use the commands to connect your local development environment to the public internet. This creates a tunnel with a persistent endpoint URL and which allows anonymous access. We use this endpoint to notify your application of calling events from the ACS Call Automation service.
+```bash
+devtunnel create --allow-anonymous
+devtunnel port create -p 8080
+```
 
-    ```bash
-    devtunnel create --allow-anonymous
-    devtunnel port create -p 8080
-    devtunnel host
-    ```
+After running these commands, DevTunnel will display a public URL in the following format:
 
-1.  **Start the sample:**
-    The client development server will run on port 3000 and proxy API requests to the server on port 8080.
+```
+https://<your-tunnel-id>-8080.<region>.devtunnels.ms
+```
 
-    ```bash
-    npm run start
-    ```
+For example:
 
+```
+https://0a1bc23d-8080.usw2.devtunnels.ms
+```
+
+**Copy this URL**—you will use it as your `SERVER_CALLBACK_URI` environment variable in later steps.
+
+**Step 4: Start your DevTunnel host (run every time you start development):**  
+Each time you start a new development session, run in a new terminal window:
+
+```bash
+devtunnel host
+```
+
+This will make your local server accessible via the public DevTunnel URL.
+
+**Step 5: Start the sample**
+
+From the **root of the project folder**, run:
+
+```bash
+npm run start
+```
+
+The client development server will run on port 3000 and proxy API requests to the server on port 8080.
+
+**Step 6: Set environment variables:**  
+- Set `SERVER_CALLBACK_URI` to your DevTunnel public URL if you haven't done so yet (e.g., `https://<your-tunnel-id>.devtunnels.ms`).
+- Set `CLIENT_ORIGIN_URL` to `http://localhost:3000`.
+
+---
+
+#### 2. Codespaces Development
+
+**Step 1: Install dependencies**
+
+From the **root of the project folder**, run:
+
+```bash
+npm run setup
+```
+
+**Step 2: Open your Codespace**  
+Forward port 8080 for the server. 
+Codespaces will generate URLs like:  
+- `https://<your-codespace-id>-8080.app.github.dev` (server)
+- `https://<your-codespace-id>-3000.app.github.dev` (client)
+
+**Step 3: Start the sample**
+
+From the **root of the project folder**, run:
+
+```bash
+npm run start
+```
+
+The client development server will run on port 3000 and proxy API requests to the server on port 8080.
+
+**Step 4: Set environment variables:**  
+- Set `SERVER_CALLBACK_URI` to your Codespace public server URL (e.g., `https://<your-codespace-id>-8080.app.github.dev`).
+- Set `CLIENT_ORIGIN_URL` to your Codespace public client URL (e.g., `https://<your-codespace-id>-3000.app.github.dev`).
+
+**Step 5: Refresh the browser page**  
+After updating your environment variables, you may need to refresh the browser page for the `3000` client to ensure the new environment variables are applied correctly.
+---
+
+**Note:**  
+Make sure your CORS configuration in the server includes the correct `CLIENT_ORIGIN_URL` for your environment (local or Codespaces).
 ### Environment Variables
 
-For local development, create a `.env` file in the `/server` directory. You can use the `.env.example` file as a template.
+For local development, create a `.env` file in the `/server` directory. You can use the `.env.template` file as a template.
 
 The following environment variables are required:
 
@@ -71,8 +140,7 @@ The following environment variables are required:
 -   `AZURE_OPENAI_SERVICE_DEPLOYMENT_MODEL_NAME`: The name of your [deployed OpenAI model](https://learn.microsoft.com/en-us/azure/ai-foundry/openai/concepts/models?tabs=global-standard%2Cstandard-chat-completions#model-summary-table-and-region-availability). i.e. gpt-4o-realtime-preview, gpt-4o-mini-realtime-preview
 -   `AZURE_OPENAI_PROMPT_INSTRUCTIONS`: The system prompt/instructions for the Azure OpenAI assistant. If not provided, a default prompt will be used.
 -   `SERVER_CALLBACK_URI`: The publicly accessible URL for your server, used for Call Automation callbacks. For local development, you can use a tunneling service like [Azure Devtunnels](https://learn.microsoft.com/en-us/azure/developer/dev-tunnels/get-started?tabs=macos).
-
-When you deploy to Azure using the "Deploy to Azure" button, these values will be configured for you in the App Service application settings.
+-   `CLIENT_ORIGIN_URL`: The origin URL of your client application (e.g., `http://localhost:3000` for local development or your Codespaces/GitHub Codespaces URL). This is required for CORS configuration to allow your frontend to communicate with the backend.
 
 
 ## Trademark

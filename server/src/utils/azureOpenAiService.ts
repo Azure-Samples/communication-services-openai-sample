@@ -81,7 +81,6 @@ function createConfigMessage(): rtClient.SessionUpdateMessage {
 
 export async function handleRealtimeMessages(): Promise<void> {
   for await (const message of realtimeStreaming.messages()) {
-    console.log('Message type:', message.type);
     switch (message.type) {
       case 'session.created':
         broadcastAgentConnectedStatus(true);
@@ -106,7 +105,6 @@ export async function handleRealtimeMessages(): Promise<void> {
         console.log(message.response.status);
         break;
       default:
-        console.log('Unknown message type received:', message.type);
         break;
     }
   }
@@ -128,7 +126,6 @@ async function receiveAudioForOutbound(data: string): Promise<void> {
   try {
     const jsonData = OutStreamingData.getStreamingDataForOutbound(data);
     sendMessage(jsonData);
-    console.log('send message for outbound audio:-->');
   } catch (e) {
     console.log(e);
   }
