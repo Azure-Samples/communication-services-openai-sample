@@ -10,5 +10,6 @@
       "label": "App Server",
       "visibility": "private"
     }
-  }
+  },
+  "postAttachCommand": "gh codespace ports visibility 8080:public --codespace \"$CODESPACE_NAME\""
 }
