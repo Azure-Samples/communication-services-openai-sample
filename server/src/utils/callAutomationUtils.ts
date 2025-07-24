@@ -6,13 +6,12 @@ import { getServerConfig } from './getConfig';
 
 /**
  * Call automation client is used to connect to the call automation service.
- * This is used to start and stop transcription.
  */
 let callAutomationClient: CallAutomationClient | undefined = undefined;
 
 /**
  * Function to get the call automation client.
- * This is used to connect to the call automation service and start transcription.
+ * This is used to connect to the call automation service.
  * @returns the call automation client
  */
 export const getCallAutomationClient = (): CallAutomationClient =>
