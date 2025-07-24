@@ -1,0 +1,14 @@
+{
+  "name": "Codespace Environment",
+  "forwardPorts": [8080, 3000],
+  "portsAttributes": {
+    "8080": {
+      "label": "Web Server",
+      "visibility": "public"
+    },
+    "3000": {
+      "label": "App Server",
+      "visibility": "private"
+    }
+  }
+}
