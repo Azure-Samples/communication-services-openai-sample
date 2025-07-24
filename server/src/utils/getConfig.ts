@@ -45,8 +45,8 @@ export const getServerConfig = (): ServerConfigSettings => {
     azureOpenAiServiceDeploymentModelName:
       process.env[ENV_AZURE_OPENAI_SERVICE_DEPLOYMENT_MODEL_NAME] ||
       DefaultConfig.azureOpenAiServiceDeploymentModelName,
-    callbackUri: process.env[ENV_SERVER_CALLBACK_URI] || DefaultConfig.callbackUri,
-    clientOriginUrl: process.env[ENV_CLIENT_ORIGIN_URL] || DefaultConfig.clientOriginUrl,
+    callbackUri: process.env[ENV_SERVER_CALLBACK_URI]?.replace(/\/$/, '') || DefaultConfig.callbackUri.replace(/\/$/, ''),
+    clientOriginUrl: process.env[ENV_CLIENT_ORIGIN_URL]?.replace(/\/$/, '') || DefaultConfig.clientOriginUrl.replace(/\/$/, ''),
     azureOpenAiPromptInstructions: process.env[ENV_AZURE_OPENAI_PROMPT_INSTRUCTIONS] || defaultPrompt
   };
 

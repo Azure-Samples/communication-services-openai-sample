@@ -25,8 +25,7 @@ export const getCallAutomationClient = (): CallAutomationClient =>
  * @returns void
  */
 export const connectGroupCallAutomation = async (serverCallId: string): Promise<void> => {
-  let websocketUrl = getServerConfig().callbackUri.replace(/^https:\/\//, 'wss://');
-  websocketUrl = websocketUrl.replace(/\/$/, '');
+  const websocketUrl = getServerConfig().callbackUri.replace(/^https:\/\//, 'wss://');
 
   const mediaStreamingOptions: MediaStreamingOptions = {
     transportUrl: websocketUrl + '/',
