@@ -6,6 +6,7 @@ This sample is a web application that demonstrates how to integrate Azure Commun
 
 - **Real-time AI Agent**: Connects a live call to an AI agent powered by Azure OpenAI for intelligent, real-time responses.
 - **Advanced Call Automation**: Uses the Azure Communication Services [Call Automation SDK](https://learn.microsoft.com/azure/communication-services/concepts/call-automation/call-automation) to manage call flows and media streaming.
+- **Real-time Audio Processing**: Integrates the `rt-client` package for real-time audio streaming and processing, enabling low-latency AI interactions during calls. See the [aoai-realtime-audio-sdk releases page](https://github.com/Azure-Samples/aoai-realtime-audio-sdk/) for details.
 - **Live Status Updates**: Leverages Server-Sent Events (SSE) to push real-time status updates (e.g., "Agent is connected") from the server to the client.
 -**Modern UI**: A responsive and mobile-friendly user interface built with React and Fluent UI.
 - **Open Source & Customizable**: The app is fully customizable, allowing you to adapt the AI agent's behavior and the UI to your needs.
@@ -31,6 +32,24 @@ This sample is a web application that demonstrates how to integrate Azure Commun
 
 You can run the sample in two ways: **locally** (using Azure DevTunnel) or **in GitHub Codespaces**.
 
+#### 0. Environment Variables
+
+Create a `.env` file in the `/server` directory. You can use the `.env.template` file as a template.
+
+The following environment variables are required:
+
+-   `RESOURCE_CONNECTION_STRING`: Your [Azure Communication Services](https://learn.microsoft.com/en-us/azure/communication-services/quickstarts/create-communication-resource?tabs=windows&pivots=platform-azp) connection string.
+-   `ENDPOINT_URL`: The endpoint URL for your [Azure Communication Services](https://learn.microsoft.com/en-us/azure/communication-services/quickstarts/create-communication-resource?tabs=windows&pivots=platform-azp) resource.
+-   `AZURE_OPENAI_SERVICE_KEY`: The API key for your Azure OpenAI service. See [instructions](https://learn.microsoft.com/en-us/azure/ai-foundry/openai/how-to/create-resource?pivots=web-portal)
+-   `AZURE_OPENAI_SERVICE_ENDPOINT`: The endpoint for your Azure OpenAI service.
+-   `AZURE_OPENAI_SERVICE_DEPLOYMENT_MODEL_NAME`: The name of your [deployed OpenAI model](https://learn.microsoft.com/en-us/azure/ai-foundry/openai/concepts/models?tabs=global-standard%2Cstandard-chat-completions#model-summary-table-and-region-availability). i.e. gpt-4o-realtime-preview, gpt-4o-mini-realtime-preview
+-   `AZURE_OPENAI_PROMPT_INSTRUCTIONS`: The system prompt/instructions for the Azure OpenAI assistant. If not provided, a default prompt will be used.
+-   `SERVER_CALLBACK_URI`: Set value after Devtunnel is created and hosted. The publicly accessible URL for your server, used for Call Automation callbacks. For local development, you can use a tunneling service like [Azure Devtunnels](https://learn.microsoft.com/en-us/azure/developer/dev-tunnels/get-started?tabs=macos).
+-   `CLIENT_ORIGIN_URL`: The origin URL of your client application (e.g., `http://localhost:3000` for local development or your Codespaces/GitHub Codespaces URL). This is required for CORS configuration to allow your frontend to communicate with the backend.
+
+**Note:**  
+Set `SERVER_CALLBACK_URI` and `CLIENT_ORIGIN_URL` values after Devtunnel is created and hosted. For Codespace, these values are set by adding `8080` and `3000` ports.
+
 #### 1. Local Development (using Azure DevTunnel)
 
 **Step 1: Install dependencies**
@@ -52,7 +71,15 @@ devtunnel create --allow-anonymous
 devtunnel port create -p 8080
 ```
 
-After running these commands, DevTunnel will display a public URL in the following format:
+**Step 4: Start your DevTunnel host (run every time you start development):**  
+Each time you start a new development session, run in a new terminal window:
+
+```bash
+devtunnel host
+```
+
+This will make your local server accessible via the public DevTunnel URL.
+After running devtunnel host, DevTunnel will display a public URL in the following format:
 
 ```
 https://<your-tunnel-id>-8080.<region>.devtunnels.ms
@@ -64,16 +91,7 @@ For example:
 https://0a1bc23d-8080.usw2.devtunnels.ms
 ```
 
-**Copy this URL**—you will use it as your `SERVER_CALLBACK_URI` environment variable in later steps.
-
-**Step 4: Start your DevTunnel host (run every time you start development):**  
-Each time you start a new development session, run in a new terminal window:
-
-```bash
-devtunnel host
-```
-
-This will make your local server accessible via the public DevTunnel URL.
+**Copy this URL**—you will use it as your `SERVER_CALLBACK_URI` `.env` environment variable.
 
 **Step 5: Start the sample**
 
@@ -85,9 +103,9 @@ npm run start
 
 The client development server will run on port 3000 and proxy API requests to the server on port 8080.
 
-**Step 6: Set environment variables:**  
-- Set `SERVER_CALLBACK_URI` to your DevTunnel public URL if you haven't done so yet (e.g., `https://<your-tunnel-id>.devtunnels.ms`).
-- Set `CLIENT_ORIGIN_URL` to `http://localhost:3000`.
+**Step 6: Open the App**
+Open a new browser page to `http://localhost:3000`
+
 
 ---
 
@@ -102,12 +120,19 @@ npm run setup
 ```
 
 **Step 2: Open your Codespace**  
-Forward port 8080 for the server. 
+Add port 8080 for the server and add port 3000 for the client
 Codespaces will generate URLs like:  
 - `https://<your-codespace-id>-8080.app.github.dev` (server)
 - `https://<your-codespace-id>-3000.app.github.dev` (client)
 
-**Step 3: Start the sample**
+**Step 3: Open your Codespace**  
+Set port visibility to Public for the port 8080 (server) forwarded address
+
+**Step 4: Set client and server url environment variables:**  
+- Set `SERVER_CALLBACK_URI` to your Codespace public server URL (e.g., `https://<your-codespace-id>-8080.app.github.dev`).
+- Set `CLIENT_ORIGIN_URL` to your Codespace public client URL (e.g., `https://<your-codespace-id>-3000.app.github.dev`).
+
+**Step 5: Start the sample**
 
 From the **root of the project folder**, run:
 
@@ -117,30 +142,15 @@ npm run start
 
 The client development server will run on port 3000 and proxy API requests to the server on port 8080.
 
-**Step 4: Set environment variables:**  
-- Set `SERVER_CALLBACK_URI` to your Codespace public server URL (e.g., `https://<your-codespace-id>-8080.app.github.dev`).
-- Set `CLIENT_ORIGIN_URL` to your Codespace public client URL (e.g., `https://<your-codespace-id>-3000.app.github.dev`).
 
-**Step 5: Refresh the browser page**  
-After updating your environment variables, you may need to refresh the browser page for the `3000` client to ensure the new environment variables are applied correctly.
+**Step 6: Open the browser page**  
+Open the client url on a browser window to open the app.
+If you already have the client url open then you may need to refresh the browser page for the client to ensure the new environment variables are applied correctly or terminate and restart the app like on step 5.
+
 ---
 
 **Note:**  
 Make sure your CORS configuration in the server includes the correct `CLIENT_ORIGIN_URL` for your environment (local or Codespaces).
-### Environment Variables
-
-For local development, create a `.env` file in the `/server` directory. You can use the `.env.template` file as a template.
-
-The following environment variables are required:
-
--   `RESOURCE_CONNECTION_STRING`: Your [Azure Communication Services](https://learn.microsoft.com/en-us/azure/communication-services/quickstarts/create-communication-resource?tabs=windows&pivots=platform-azp) connection string.
--   `ENDPOINT_URL`: The endpoint URL for your [Azure Communication Services](https://learn.microsoft.com/en-us/azure/communication-services/quickstarts/create-communication-resource?tabs=windows&pivots=platform-azp) resource.
--   `AZURE_OPENAI_SERVICE_KEY`: The API key for your Azure OpenAI service. See [instructions](https://learn.microsoft.com/en-us/azure/ai-foundry/openai/how-to/create-resource?pivots=web-portal)
--   `AZURE_OPENAI_SERVICE_ENDPOINT`: The endpoint for your Azure OpenAI service.
--   `AZURE_OPENAI_SERVICE_DEPLOYMENT_MODEL_NAME`: The name of your [deployed OpenAI model](https://learn.microsoft.com/en-us/azure/ai-foundry/openai/concepts/models?tabs=global-standard%2Cstandard-chat-completions#model-summary-table-and-region-availability). i.e. gpt-4o-realtime-preview, gpt-4o-mini-realtime-preview
--   `AZURE_OPENAI_PROMPT_INSTRUCTIONS`: The system prompt/instructions for the Azure OpenAI assistant. If not provided, a default prompt will be used.
--   `SERVER_CALLBACK_URI`: The publicly accessible URL for your server, used for Call Automation callbacks. For local development, you can use a tunneling service like [Azure Devtunnels](https://learn.microsoft.com/en-us/azure/developer/dev-tunnels/get-started?tabs=macos).
--   `CLIENT_ORIGIN_URL`: The origin URL of your client application (e.g., `http://localhost:3000` for local development or your Codespaces/GitHub Codespaces URL). This is required for CORS configuration to allow your frontend to communicate with the backend.
 
 
 ## Trademark
