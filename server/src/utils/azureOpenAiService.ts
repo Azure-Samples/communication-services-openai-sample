@@ -23,7 +23,7 @@ let realtimeStreaming: rtClient.LowLevelRTClient;
 export async function sendAudioToExternalAi(data: string): Promise<void> {
   try {
     const audio = data;
-    if (audio) {
+    if (audio && realtimeStreaming) {
       await realtimeStreaming.send({
         type: 'input_audio_buffer.append',
         audio: audio

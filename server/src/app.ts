@@ -118,8 +118,6 @@ const server = http.createServer(app);
 const wss = new WebSocket.Server({ server });
 
 wss.on('connection', async (ws: WebSocket) => {
-  console.log('WebSocket connection established');
-
   ws.on('open', () => {
     // Note: 'open' event is for client-side WebSockets. For 'ws' server, connection is already open here.
     console.log('WebSocket connection is open and ready.');
@@ -145,12 +143,6 @@ wss.on('connection', async (ws: WebSocket) => {
       // Optionally, send an error message back to the client if appropriate
       // ws.send(JSON.stringify({ type: 'error', message: 'Error processing your message.' }));
     }
-  });
-
-  ws.on('close', (code, reason) => {
-    console.log(
-      `WebSocket connection closed. Code: ${code}, Reason: ${reason ? reason.toString() : 'No reason given'}`
-    );
   });
 
   ws.on('error', (error) => {
