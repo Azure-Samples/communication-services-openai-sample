@@ -13,8 +13,21 @@ This sample is a web application that demonstrates how to integrate Azure Commun
 
 ## Code Structure
 
-- **/client**: Frontend client application built with React and TypeScript.
-- **/server**: Backend server application built with Node.js and Express.
+### Frontend (Client)
+- React: A JavaScript library for building the user interface.
+- TypeScript: A typed superset of JavaScript for building robust, scalable applications.
+- Fluent UI: A Microsoft-designed UI component library for creating a modern and responsive user experience.
+- Azure Communication Services (ACS) Calling SDK: A client-side library for managing the user's connection to the call and handling local audio streams directly from the browser.
+
+### Backend (Server)
+- Node.js & Express.js: A JavaScript runtime and web framework used to create the API, host the Call Automation callback endpoint, and manage the media streaming WebSocket.
+- Azure Communication Services (ACS) Call Automation SDK: The core server-side library for orchestrating the call. It allows the server to programmatically create calls, add participants, and, most importantly, start and stop real-time media streaming. It is the bridge between the ACS platform and the server's business logic.
+- rt-client: A specialized client library for streaming audio to and from the Azure OpenAI real-time audio API. It handles the low-level WebSocket connection and message formatting required by the OpenAI service.
+
+
+At a summary level, the architecture of this experience looks something like the following:
+![Alt text](docs/images/sequence_diagram.png)
+
 
 ## Local Setup
 
