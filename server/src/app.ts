@@ -19,13 +19,14 @@ import issueToken from './routes/issueToken';
 import refreshToken from './routes/refreshToken';
 import getEndpointUrl from './routes/getEndpointUrl';
 import callAutomationEvent from './routes/callAutomationEvent';
-import createGroupCallWithAutomation from './routes/createGroupCallWithAutomation';
+
 
 // Import the new SSE router
 import agentStatusEventsRouter from './routes/agentStatusEvents';
 import callAutomationEventRouter from './routes/callAutomationEvent';
 import { CommunicationIdentityClient } from '@azure/communication-identity';
 import getClientConfig from './routes/getClientConfig';
+import joinGroupCallWithAutomation from './routes/joinGroupCallWithAutomation';
 import { getServerConfig } from './utils/getConfig';
 import { tokenController } from './controllers/tokenController';
 
@@ -65,7 +66,7 @@ app.use(express.urlencoded({ extended: false }));
 app.use(express.static(path.resolve(__dirname, 'build')));
 
 // Add this to your route registrations
-app.use('/createGroupCallWithAutomation', createGroupCallWithAutomation);
+app.use('/joinGroupCallWithAutomation', joinGroupCallWithAutomation);
 
 app.use('/api/config', getClientConfig);
 

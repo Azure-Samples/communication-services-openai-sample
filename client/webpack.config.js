@@ -71,7 +71,7 @@ module.exports = (env, argv) => {
           target: 'http://[::1]:8080',
           changeOrigin: true
         },
-        '/createGroupCallWithAutomation': {
+        '/joinGroupCallWithAutomation': {
           target: 'http://[::1]:8080',
           changeOrigin: true
         },

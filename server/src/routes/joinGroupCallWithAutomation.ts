@@ -5,26 +5,27 @@ import * as express from 'express';
 import { connectGroupCallAutomation } from '../utils/callAutomationUtils';
 
 const router = express.Router();
-interface CreateGroupCallParam {
+
+interface JoinGroupCallParam {
   serverCallId: string;
 }
 
 /**
- * route: /createGroupCallWithAutomation
+ * route: /joinGroupCallWithAutomation
  *
- * purpose: Create a group call with call automation
+ * purpose: Join a group call with call automation
  *
- * @param groupId: id of the group to create a call for
+ * @param serverCallId: id of the group to join a call for
  */
 router.post('/', async function (req, res) {
-  const param: CreateGroupCallParam = req.body;
+  const param: JoinGroupCallParam = req.body;
 
   try {
     await connectGroupCallAutomation(param.serverCallId);
     res.status(200).send({ success: true });
   } catch (error) {
-    console.error('Error creating group call with automation:', error);
-    res.status(500).send({ error: 'Failed to create group call with automation' });
+    console.error('Error joining group call with automation:', error);
+    res.status(500).send({ error: 'Failed to join group call with automation' });
   }
 });
 

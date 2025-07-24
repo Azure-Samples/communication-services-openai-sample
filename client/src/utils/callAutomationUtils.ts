@@ -10,7 +10,7 @@ import { Call } from '@azure/communication-calling';
 export const connectCallAutomationToGroupCall = async (call: Call): Promise<boolean> => {
   if (call.info !== undefined && call.state === 'Connected') {
     const serverCallID = await call.info.getServerCallId();
-    const response = await fetch('/createGroupCallWithAutomation', {
+    const response = await fetch('/joinGroupCallWithAutomation', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json'
