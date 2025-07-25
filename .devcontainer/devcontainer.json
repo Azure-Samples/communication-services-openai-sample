@@ -11,5 +11,5 @@
       "visibility": "private"
     }
   },
-  "postAttachCommand": "gh codespace ports visibility 8080:public --codespace \"$CODESPACE_NAME\""
+  "postAttachCommand": "bash ./.devcontainer/post-create.sh"
 }

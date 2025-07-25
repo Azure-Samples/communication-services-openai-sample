@@ -75,8 +75,10 @@ From the **root of the project folder**, run:
 npm run setup
 ```
 
-**Step 2: Create Ports if not already created**  
+**Step 2: Confirm ports are created**  
 When using codespaces, the project will automatically create ports 3000 and 8080. It will also open port 8080 for your convenience.
+Additionally, the urls for the ports will be automatically populated into the .env file.
+
 However, if the ports are not created or opened automatically upon codespace creation, add port 8080 for the server and add port 3000 for the client.
 Set port visibility to Public for the port 8080 (server) forwarded address if not already already public.
 
@@ -106,8 +108,25 @@ npm run start
 
 The client development server will run on port 3000 and proxy API requests to the server on port 8080.
 
+**Step 5: (Optional) Customize the AI Agent's Instructions**
 
-**Step 5: Open the browser page**  
+You can change the default instructions (system prompt) that the AI agent uses by editing the `defaultPrompt.ts` file located at `server/src/defaultPrompt.ts`. This allows you to tailor the agent's behavior to your specific scenario.
+
+For example, to make the agent act as a friendly travel assistant, you could update the prompt in `server/src/defaultPrompt.ts` like this:
+
+```ts
+// filepath: server/src/defaultPrompt.ts
+export const defaultPrompt = `
+You are a helpful and friendly travel assistant. Answer questions about travel destinations, flights, and local attractions. Always be polite and concise.
+`;
+```
+
+Alternatively, you can set a custom prompt at runtime by providing the `AZURE_OPENAI_PROMPT_INSTRUCTIONS` environment variable in your `.env` file. If this variable is not set, the prompt from `defaultPrompt.ts` will be used.
+
+---
+
+
+**Step 6: Open the browser page**  
 Open the 3000 client url on a browser window to open the app.
 If you already have the client url open then you may need to refresh the browser page for the client to ensure the new environment variables are applied correctly or terminate and restart the app like on step 5.
 
