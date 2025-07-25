@@ -26,7 +26,7 @@ This sample is a web application that demonstrates how to integrate Azure Commun
 
 
 At a summary level, the architecture of this experience looks something like the following:
-![Alt text](docs/images/sequence_diagram.png)
+![Sequence Diagram](docs/images/sequence_diagram.png)
 
 
 ## Local Setup
@@ -77,8 +77,10 @@ npm run setup
 
 **Step 2: Create Ports if not already created**  
 When using codespaces, the project will automatically create ports 3000 and 8080. It will also open port 8080 for your convenience.
-However, if the ports ar enot created or opened automatically upon codespace creation, add port 8080 for the server and add port 3000 for the client.
+However, if the ports are not created or opened automatically upon codespace creation, add port 8080 for the server and add port 3000 for the client.
 Set port visibility to Public for the port 8080 (server) forwarded address if not already already public.
+
+![Ports tab location](docs/images/ports_tab.png)
 
 Codespaces will generate URLs like:  
 - `https://<your-codespace-id>-8080.app.github.dev` (server with visibility public)
