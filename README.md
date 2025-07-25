@@ -63,7 +63,55 @@ The following environment variables are required:
 **Note:**  
 Set `SERVER_CALLBACK_URI` and `CLIENT_ORIGIN_URL` values after Devtunnel is created and hosted. For Codespace, these values are set by adding `8080` and `3000` ports.
 
-#### 1. Local Development (using Azure DevTunnel)
+---
+
+#### 1. Codespaces Development
+
+**Step 1: Install dependencies**
+
+From the **root of the project folder**, run:
+
+```bash
+npm run setup
+```
+
+**Step 2: Create Ports if not already created**  
+When using codespaces, the project will automatically create ports 3000 and 8080. It will also open port 8080 for your convenience.
+However, if the ports ar enot created or opened automatically upon codespace creation, add port 8080 for the server and add port 3000 for the client.
+Set port visibility to Public for the port 8080 (server) forwarded address if not already already public.
+
+Codespaces will generate URLs like:  
+- `https://<your-codespace-id>-8080.app.github.dev` (server with visibility public)
+- `https://<your-codespace-id>-3000.app.github.dev` (client)
+
+
+**Note:**
+If you would like your client to be publically accessible you will need to set the port 3000 visibility to public as well.
+
+
+
+**Step 3: Set client and server url environment variables:**  
+- Set `SERVER_CALLBACK_URI` to your Codespace public server URL (e.g., `https://<your-codespace-id>-8080.app.github.dev`).
+- Set `CLIENT_ORIGIN_URL` to your Codespace public client URL (e.g., `https://<your-codespace-id>-3000.app.github.dev`).
+
+**Step 4: Start the sample**
+
+From the **root of the project folder**, run:
+
+```bash
+npm run start
+```
+
+The client development server will run on port 3000 and proxy API requests to the server on port 8080.
+
+
+**Step 5: Open the browser page**  
+Open the 3000 client url on a browser window to open the app.
+If you already have the client url open then you may need to refresh the browser page for the client to ensure the new environment variables are applied correctly or terminate and restart the app like on step 5.
+
+---
+
+#### 2. Local Development (using Azure DevTunnel)
 
 **Step 1: Install dependencies**
 
@@ -120,47 +168,7 @@ The client development server will run on port 3000 and proxy API requests to th
 Open a new browser page to `http://localhost:3000`
 
 
----
-
-#### 2. Codespaces Development
-
-**Step 1: Install dependencies**
-
-From the **root of the project folder**, run:
-
-```bash
-npm run setup
-```
-
-**Step 2: Open your Codespace**  
-Add port 8080 for the server and add port 3000 for the client
-Codespaces will generate URLs like:  
-- `https://<your-codespace-id>-8080.app.github.dev` (server)
-- `https://<your-codespace-id>-3000.app.github.dev` (client)
-
-**Step 3: Open your Codespace**  
-Set port visibility to Public for the port 8080 (server) forwarded address
-
-**Step 4: Set client and server url environment variables:**  
-- Set `SERVER_CALLBACK_URI` to your Codespace public server URL (e.g., `https://<your-codespace-id>-8080.app.github.dev`).
-- Set `CLIENT_ORIGIN_URL` to your Codespace public client URL (e.g., `https://<your-codespace-id>-3000.app.github.dev`).
-
-**Step 5: Start the sample**
-
-From the **root of the project folder**, run:
-
-```bash
-npm run start
-```
-
-The client development server will run on port 3000 and proxy API requests to the server on port 8080.
-
-
-**Step 6: Open the browser page**  
-Open the client url on a browser window to open the app.
-If you already have the client url open then you may need to refresh the browser page for the client to ensure the new environment variables are applied correctly or terminate and restart the app like on step 5.
-
----
+---;
 
 **Note:**  
 Make sure your CORS configuration in the server includes the correct `CLIENT_ORIGIN_URL` for your environment (local or Codespaces).
