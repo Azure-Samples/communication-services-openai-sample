@@ -94,21 +94,15 @@ If you would like your client to be publically accessible you will need to set t
 
 
 
-**Step 3: Set client and server url environment variables:**  
-- Set `SERVER_CALLBACK_URI` to your Codespace public server URL (e.g., `https://<your-codespace-id>-8080.app.github.dev`).
-- Set `CLIENT_ORIGIN_URL` to your Codespace public client URL (e.g., `https://<your-codespace-id>-3000.app.github.dev`).
+**Step 3: Confirm client and server url environment variables**  
+Confirm that `SERVER_CALLBACK_URI` and `CLIENT_ORIGIN_URL` are set to your codespaces forwarded ports.
 
-**Step 4: Start the sample**
+i.e.
+- `SERVER_CALLBACK_URI` on your Codespace public server URL (e.g., `https://<your-codespace-id>-8080.app.github.dev`).
+- `CLIENT_ORIGIN_URL` on your Codespace public client URL (e.g., `https://<your-codespace-id>-3000.app.github.dev`).
 
-From the **root of the project folder**, run:
 
-```bash
-npm run start
-```
-
-The client development server will run on port 3000 and proxy API requests to the server on port 8080.
-
-**Step 5: (Optional) Customize the AI Agent's Instructions**
+**Step 4: (Optional) Customize the AI Agent's Instructions**
 
 You can change the default instructions (system prompt) that the AI agent uses by editing the `defaultPrompt.ts` file located at `server/src/defaultPrompt.ts`. This allows you to tailor the agent's behavior to your specific scenario.
 
@@ -122,6 +116,18 @@ You are a helpful and friendly travel assistant. Answer questions about travel d
 ```
 
 Alternatively, you can set a custom prompt at runtime by providing the `AZURE_OPENAI_PROMPT_INSTRUCTIONS` environment variable in your `.env` file. If this variable is not set, the prompt from `defaultPrompt.ts` will be used.
+
+---
+
+**Step 5: Start the sample**
+
+From the **root of the project folder**, run:
+
+```bash
+npm run start
+```
+
+The client development server will run on port 3000 and proxy API requests to the server on port 8080.
 
 ---
 
