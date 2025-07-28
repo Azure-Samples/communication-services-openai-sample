@@ -45,6 +45,9 @@ At a summary level, the architecture of this experience looks something like the
 
 You can run the sample in two ways: **locally** (using Azure DevTunnel) or **in GitHub Codespaces**.
 
+[![Open in GitHub Codespaces](https://img.shields.io/static/v1?style=for-the-badge&label=GitHub+Codespaces&message=Open&color=brightgreen&logo=github)](https://github.com/codespaces/new?hide_repo_select=true&ref=main&repo=1013992641&machine=standardLinux16gb&devcontainer_path=.devcontainer%2Fdevcontainer.json&location=WestUs2)
+
+
 #### 0. Environment Variables
 
 Create a `.env` file in the `/server` directory. You can use the `.env.template` file as a template.
