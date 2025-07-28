@@ -117,8 +117,6 @@ You are a helpful and friendly travel assistant. Answer questions about travel d
 
 Alternatively, you can set a custom prompt at runtime by providing the `AZURE_OPENAI_PROMPT_INSTRUCTIONS` environment variable in your `.env` file. If this variable is not set, the prompt from `defaultPrompt.ts` will be used.
 
----
-
 **Step 5: Start the sample**
 
 From the **root of the project folder**, run:
@@ -128,8 +126,6 @@ npm run start
 ```
 
 The client development server will run on port 3000 and proxy API requests to the server on port 8080.
-
----
 
 
 **Step 6: Open the browser page**  
